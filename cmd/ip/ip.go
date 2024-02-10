@@ -11,7 +11,6 @@ import (
 	"net/http"
 
 	"github.com/spf13/cobra"
-	"golang.design/x/clipboard"
 )
 
 type fullIP struct {
@@ -45,17 +44,6 @@ func getIp() (fullIP, error) {
 	return ip, nil
 }
 
-func copyToClipboard(data string) {
-	err := clipboard.Init()
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	clipboard.Write(clipboard.FmtText, []byte(data))
-	clipboard.Read(clipboard.FmtImage)
-}
-
 func prettyPrint(data fullIP) {
 	b, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
@@ -64,7 +52,6 @@ func prettyPrint(data fullIP) {
 	fmt.Println(string(b))
 }
 
-// ipCmd represents the ip command
 var IpCmd = &cobra.Command{
 	Use:   "ip",
 	Short: "Gets current ip address",
@@ -81,7 +68,6 @@ var IpCmd = &cobra.Command{
 			return
 		}
 
-		copyToClipboard(ip.Query)
 		fmt.Println(ip.Query)
 	},
 }
