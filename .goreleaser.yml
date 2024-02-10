@@ -1,0 +1,31 @@
+builds:
+  - binary: flow
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -mod=vendor
+
+release:
+  mode: keep-existing
+  prerelease: auto
+
+universal_binaries:
+  - replace: true
+
+brews:
+  - name: flow
+    homepage: https://github.com/Edens-Angel/flow-cli
+    tap:
+      owner: edens-angel
+      name: flow-cli
+    commit_author:
+      name: edens-angel
+
+checksum:
+  name_template: "checksums.txt"
