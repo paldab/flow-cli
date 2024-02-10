@@ -21,7 +21,7 @@ universal_binaries:
 brews:
   - name: flow
     homepage: https://github.com/Edens-Angel/flow-cli
-    tap:
+    repository:
       owner: edens-angel
       name: flow-cli
     commit_author:
