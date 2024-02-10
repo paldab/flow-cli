@@ -9,7 +9,7 @@ class Flow < Formula
 
   on_macos do
     url "https://github.com/Edens-Angel/flow-cli/releases/download/v0.1/flow-cli_0.1_darwin_all.tar.gz"
-    sha256 "eebd1aa999f391347b0aeebc198b7a429a9f3a0d79a3c8c9aea4f793ca2190be"
+    sha256 "4ec2d3b5f90411cc5ff96cb6d396a89c929470a2a2fbb7ce334b65c90f25b606"
 
     def install
       bin.install "flow-cli"
@@ -19,7 +19,7 @@ class Flow < Formula
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
       url "https://github.com/Edens-Angel/flow-cli/releases/download/v0.1/flow-cli_0.1_linux_arm64.tar.gz"
-      sha256 "93d86942065bf734e789337226971b3bef782dcca6250f6059ebaeadcc7e1e38"
+      sha256 "15ecb2d7245cf4c8e94a6afc7530e85fa3bef80367d696124941af10bf17132c"
 
       def install
         bin.install "flow"
@@ -27,7 +27,7 @@ class Flow < Formula
     end
     if Hardware::CPU.intel?
       url "https://github.com/Edens-Angel/flow-cli/releases/download/v0.1/flow-cli_0.1_linux_amd64.tar.gz"
-      sha256 "ba964329ef4557f1d9b05d31ada55500992b98d658fa1add1ad1f154ee1793ae"
+      sha256 "4dc3974b1bdc2096e4ac30e17c119e9aefeda910bd09116853c4459706825fe5"
 
       def install
         bin.install "flow"
