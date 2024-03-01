@@ -48,18 +48,28 @@ func connectToDatabaseCli(args []string) {
 	process.Wait()
 }
 
-func connect(db string) {
-	targetDb := dbLookup(db)
+func handlePasswordDecryption(password string) string {
+	if isBase64Encoded(password) {
+		return decodePassword(password)
+	}
 
+	return password
+}
+
+func connect(db string) {
 	if database == "" {
 		log.Fatal("Must specify a database")
 	}
+
+	targetDb := dbLookup(db)
 
 	if passwordInput != "" {
 		targetDb.Pass = passwordInput
 	}
 
-	query := CreateDatabaseConnectCommand(targetDb.Type, targetDb.Host, targetDb.User, targetDb.Pass, database)
+	decryptedPassword := handlePasswordDecryption(targetDb.Pass)
+
+	query := CreateDatabaseConnectCommand(targetDb.Type, targetDb.Host, targetDb.User, decryptedPassword, database)
 	args := strings.Split(query, " ")
 	connectToDatabaseCli(args)
 }

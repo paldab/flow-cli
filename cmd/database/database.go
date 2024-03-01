@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -32,12 +33,16 @@ func dbLookup(target string) DatabaseConfig {
 	return DatabaseConfig{}
 }
 
+const HIDDEN_PASSWORD = "********"
+
 var DatabaseCmd = &cobra.Command{
 	Use:   "database",
 	Short: "database represents the database module of the CLI. Managing your databases for easy overview and connection",
 	Long:  `database represents the database module of the CLI. Managing your databases for easy overview and connection`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+		// cmd.Help()
+		fmt.Println(isBase64Encoded("rKBJdZPk23Eckbdn"))
+		fmt.Println(isBase64Encoded("admin"))
 	},
 }
 

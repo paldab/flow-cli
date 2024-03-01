@@ -14,10 +14,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-var host string
-var user string
-var pass string
-var dbType string
+var hostInput string
+var userInput string
+var passInput string
+var dbTypeInput string
 
 func isDbNameUnique(dbs []DatabaseConfig, name string) bool {
 	for _, db := range dbs {
@@ -29,7 +29,6 @@ func isDbNameUnique(dbs []DatabaseConfig, name string) bool {
 	return true
 }
 
-// TODO: Encrypt password
 func addDatabase(name string, host string, user string, password string, dbType string) {
 	if name == "" {
 		log.Fatal("Database cannot be an empty string!")
@@ -37,20 +36,20 @@ func addDatabase(name string, host string, user string, password string, dbType 
 
 	lowerCaseDbType := strings.ToLower(dbType)
 	if lowerCaseDbType != "mysql" && lowerCaseDbType != "postgres" {
-		log.Fatal(fmt.Sprintf("\nCannot add database with type %s! Choose between 'mysql' or 'postgres'", dbType))
+		log.Fatalf("\nCannot add database with type %s! Choose between 'mysql' or 'postgres'", dbType)
 	}
 
 	dbs := getDatabasesFromConfig()
 	isDbNameUnique := isDbNameUnique(dbs, name)
 	if !isDbNameUnique {
-		log.Fatal(fmt.Sprintf("Failed to add database, '%s' is not unique!", name))
+		log.Fatalf("Failed to add database, '%s' is not unique!", name)
 	}
 
 	var database DatabaseConfig = DatabaseConfig{
 		Name: name,
 		Host: host,
 		User: user,
-		Pass: pass,
+		Pass: encodePassword(password),
 		Type: lowerCaseDbType,
 	}
 
@@ -58,7 +57,7 @@ func addDatabase(name string, host string, user string, password string, dbType 
 	viper.Set("databases", newDatabases)
 	viper.WriteConfig()
 
-	database.Pass = "****"
+	database.Pass = HIDDEN_PASSWORD
 
 	fmt.Println("Successfully added the following entry")
 	utils.PrintTable(getDatabaseConfigTableHeaders(), []table.Row{database.mapToTableRow()})
@@ -73,22 +72,22 @@ database add example-prod --host=0.0.0.0 -u user1 -p pass1`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
-			log.Fatal("Could not find value to add to databases!")
+			log.Fatal("Missing database name. Could not find value to add to databases!")
 		}
 
-		addDatabase(args[0], host, user, pass, dbType)
+		addDatabase(args[0], hostInput, userInput, passInput, dbTypeInput)
 	},
 }
 
 func init() {
-	addCmd.Flags().StringVar(&host, "host", "", "Define the host of the database")
+	addCmd.Flags().StringVar(&hostInput, "host", "", "Define the host of the database")
 	addCmd.MarkFlagRequired("host")
 
-	addCmd.Flags().StringVarP(&user, "user", "u", "", "Define a user for the database")
+	addCmd.Flags().StringVarP(&userInput, "user", "u", "", "Define a user for the database")
 	addCmd.MarkFlagRequired("user")
 
-	addCmd.Flags().StringVarP(&pass, "password", "p", "", "Define a password for the database")
+	addCmd.Flags().StringVarP(&passInput, "password", "p", "", "Define a password for the database")
 
-	addCmd.Flags().StringVarP(&dbType, "type", "t", "", "Type of database. MySQL or Postgres")
+	addCmd.Flags().StringVarP(&dbTypeInput, "type", "t", "", "Type of database. MySQL or Postgres")
 	addCmd.MarkFlagRequired("type")
 }
