@@ -20,7 +20,7 @@ brews:
   - name: flow
     repository:
       owner: edens-angel
-      name: flow-cli
+      name: homebrew-flow-cli
     commit_author:
       name: edens-angel
     folder: Formula
