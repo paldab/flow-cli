@@ -1,5 +1,6 @@
 builds:
   - binary: flow
+    id: linux
     goos:
       - darwin
       - linux
@@ -10,7 +11,6 @@ builds:
       - CGO_ENABLED=0
 
 release:
-  mode: keep-existing
   prerelease: auto
 
 universal_binaries:
@@ -23,9 +23,13 @@ brews:
       name: flow-cli
     commit_author:
       name: edens-angel
+    folder: Formula
     homepage: https://github.com/Edens-Angel/flow-cli
     description: "Devops CLI to handle basic devops tasks"
     test: system "flow ip"
 
 checksum:
   name_template: "checksums.sha256"
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
