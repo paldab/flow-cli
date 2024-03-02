@@ -18,7 +18,7 @@ func getImages(namespace string) {
 		cmd = fmt.Sprintf("%s -n %s", cmd, namespace)
 	}
 
-	utils.RunCommand(cmd, true)
+	utils.RunCommandWithOutput(cmd, true)
 }
 
 var imagesCmd = &cobra.Command{

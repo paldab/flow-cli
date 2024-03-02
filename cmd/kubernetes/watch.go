@@ -29,7 +29,7 @@ func watchResources(isPod bool, namespace string) {
 		cmd = fmt.Sprintf("%s -n %s", cmd, namespace)
 	}
 
-	output, _ := utils.RunCommand(cmd, false)
+	output, _ := utils.RunCommandWithOutput(cmd, false)
 	if output != previousOutput {
 		fmt.Println(output)
 		previousOutput = output

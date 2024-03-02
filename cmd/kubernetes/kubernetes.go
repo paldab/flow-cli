@@ -34,6 +34,7 @@ func init() {
 	KubernetesCmd.Aliases = []string{"k", "kube"}
 	KubernetesCmd.AddCommand(imagesCmd)
 	KubernetesCmd.AddCommand(watchCmd)
+	KubernetesCmd.AddCommand(revertCmd)
 
 	KubernetesCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "", "Select the namespace in your cluster")
 }

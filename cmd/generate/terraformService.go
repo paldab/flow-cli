@@ -125,7 +125,7 @@ func generateStructure(service string) {
 	}
 
 	// format terraform code
-	utils.RunCommand("terraform fmt -recursive", false)
+	utils.RunCommandWithOutput("terraform fmt -recursive", false)
 
 	fmt.Printf("Files generated for service: %s\n", service)
 }

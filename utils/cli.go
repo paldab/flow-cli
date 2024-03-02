@@ -18,7 +18,24 @@ func PrepareCommand(command string) *exec.Cmd {
 	return exec.Command(exe, args[1:]...)
 }
 
-func RunCommand(command string, showOutput bool) (string, string) {
+func RunCommand(command string) *exec.Cmd {
+	cmd := PrepareCommand(command)
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err.Error())
+	}
+
+	if err := cmd.Wait(); err != nil {
+		log.Fatal(err.Error())
+	}
+
+	return cmd
+}
+
+func RunCommandWithOutput(command string, showOutput bool) (string, string) {
 	cmd := PrepareCommand(command)
 	var outb, errb bytes.Buffer
 
