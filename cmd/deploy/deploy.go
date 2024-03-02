@@ -4,6 +4,7 @@ Copyright © 2024 Paul <EMAIL ADDRESS>
 package deploy
 
 import (
+	"github.com/flow-cli/internal/deploy"
 	"github.com/spf13/cobra"
 )
 
@@ -18,10 +19,10 @@ var DeployCmd = &cobra.Command{
 		environment := args[0]
 
 		if plan {
-			tfPlan(environment)
+			deploy.TfPlan(environment)
 			return
 		}
-		tfApply(environment, approve)
+		deploy.TfApply(environment, approve)
 	},
 }
 

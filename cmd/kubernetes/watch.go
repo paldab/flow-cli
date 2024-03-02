@@ -4,19 +4,20 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package kubernetes
 
 import (
-	"flow/cli/utils"
 	"fmt"
 	"log"
 	"slices"
 	"time"
 
+	"github.com/flow-cli/internal/cli"
+	"github.com/flow-cli/internal/kubernetes"
 	"github.com/spf13/cobra"
 )
 
 var previousOutput string
 
 func watchResources(isPod bool, namespace string) {
-	kubectl := getKubectlPath()
+	kubectl := kubernetes.GetKubectlPath()
 	resource := "node"
 
 	if isPod {
@@ -29,7 +30,7 @@ func watchResources(isPod bool, namespace string) {
 		cmd = fmt.Sprintf("%s -n %s", cmd, namespace)
 	}
 
-	output, _ := utils.RunCommandWithOutput(cmd, false)
+	output, _ := cli.RunCommandWithOutput(cmd, false)
 	if output != previousOutput {
 		fmt.Println(output)
 		previousOutput = output

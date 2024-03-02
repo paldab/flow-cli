@@ -1,4 +1,4 @@
-module flow/cli
+module github.com/flow-cli
 
 go 1.21.5
 

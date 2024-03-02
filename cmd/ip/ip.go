@@ -4,67 +4,27 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package ip
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
-	"net/http"
 
+	"github.com/flow-cli/internal/network"
 	"github.com/spf13/cobra"
 )
 
-type fullIP struct {
-	Query       string `json:"query"`
-	Country     string `json:"country"`
-	CountryCode string `json:"countryCode"`
-	Region      string `json:"region"`
-	RegionName  string `json:"regionName"`
-	City        string `json:"city"`
-	ISP         string `json:"ISP"`
-	TimeZone    string `json:"timeZone"`
-}
-
 var allFlag bool
-
-func getIp() (fullIP, error) {
-	req, err := http.Get("http://ip-api.com/json/")
-	if err != nil {
-		return fullIP{}, err
-	}
-	defer req.Body.Close()
-
-	body, err := io.ReadAll(req.Body)
-	if err != nil {
-		return fullIP{}, err
-	}
-
-	var ip fullIP
-	json.Unmarshal(body, &ip)
-
-	return ip, nil
-}
-
-func prettyPrint(data fullIP) {
-	b, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(string(b))
-}
 
 var IpCmd = &cobra.Command{
 	Use:   "ip",
 	Short: "Gets current ip address",
 	Long:  `Gets current ip address.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		ip, err := getIp()
+		ip, err := network.GetIp()
 		if err != nil {
 			log.Fatal(err.Error())
-			return
 		}
 
 		if allFlag {
-			prettyPrint(ip)
+			network.PrettyPrint(ip)
 			return
 		}
 

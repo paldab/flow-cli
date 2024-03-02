@@ -1,17 +1,18 @@
 package cmd
 
 import (
-	"flow/cli/cmd/database"
-	"flow/cli/cmd/deploy"
-	"flow/cli/cmd/generate"
-	"flow/cli/cmd/ip"
-	"flow/cli/cmd/kubernetes"
-	"flow/cli/cmd/task"
 	"fmt"
 	"log"
 	"os"
 	"path"
 
+	"github.com/flow-cli/cmd/database"
+	"github.com/flow-cli/cmd/deploy"
+	"github.com/flow-cli/cmd/generate"
+	"github.com/flow-cli/cmd/ip"
+	"github.com/flow-cli/cmd/kubernetes"
+	internalDatabase "github.com/flow-cli/internal/database"
+	"github.com/flow-cli/internal/task"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -69,13 +70,13 @@ func handleDefaultCreateDatabaseConfig() {
 		log.Fatal(err.Error())
 	}
 
-	var dbs []database.DatabaseConfig
+	var dbs []internalDatabase.DatabaseConfig
 	if err := viper.UnmarshalKey("databases", &dbs); err != nil {
 		log.Fatal(err.Error())
 	}
 
 	if len(dbs) == 0 {
-		viper.SetDefault("databases", []database.DatabaseConfig{})
+		viper.SetDefault("databases", []internalDatabase.DatabaseConfig{})
 	}
 }
 
@@ -103,7 +104,6 @@ func init() {
 	rootCmd.AddCommand(deploy.DeployCmd)
 	rootCmd.AddCommand(kubernetes.KubernetesCmd)
 	rootCmd.AddCommand(generate.GenerateCmd)
-
 	// rootCmd.AddCommand(task.TaskCmd)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.flow/config.yaml)")
@@ -121,8 +121,8 @@ func initConfig() {
 
 		configFolderLocation := path.Join(home, DEFAULTCONFIGFOLDER)
 		handleDefaultConfigSetup(configFolderLocation, DEFAULTCONFIGFILE)
-		// handleDefaultCreateTaskHistory(configFolderLocation)
 		handleDefaultCreateDatabaseConfig()
+		// handleDefaultCreateTaskHistory(configFolderLocation)
 
 		viper.WriteConfig()
 	}

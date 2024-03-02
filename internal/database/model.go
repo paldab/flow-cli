@@ -4,6 +4,8 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
+const HIDDEN_PASSWORD = "********"
+
 type DatabaseConfig struct {
 	Name string
 	Host string

@@ -1,35 +1,36 @@
 package deploy
 
 import (
-	"flow/cli/utils"
 	"fmt"
 	"strings"
+
+	"github.com/flow-cli/internal/cli"
 )
 
 func handleWorkspace(environment string) {
 	command := "terraform workspace show"
-	output, _ := utils.RunCommandWithOutput(command, false)
+	output, _ := cli.RunCommandWithOutput(command, false)
 
 	workspace := strings.TrimSpace(output)
 	if workspace != environment {
 		command = fmt.Sprintf("terraform workspace select %s", environment)
-		utils.RunCommand(command)
+		cli.RunCommand(command)
 	}
 }
 
-func tfPlan(environment string) {
+func TfPlan(environment string) {
 	handleWorkspace(environment)
 	command := fmt.Sprintf("terraform plan --var-file=./vars/%s.tfvars", environment)
 
-	utils.RunCommand(command)
+	cli.RunCommand(command)
 }
 
-func tfApply(environment string, approve bool) {
+func TfApply(environment string, approve bool) {
 	handleWorkspace(environment)
 	command := fmt.Sprintf("terraform apply --var-file=./vars/%s.tfvars", environment)
 	if approve {
 		command = command + " -auto-approve"
 	}
 
-	utils.RunCommand(command)
+	cli.RunCommand(command)
 }
