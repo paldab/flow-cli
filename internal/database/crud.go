@@ -13,7 +13,7 @@ import (
 )
 
 func ListDatabases(areCredsHidden, isDecoded bool, databases []DatabaseConfig) {
-	headers := getDatabaseConfigTableHeaders()
+	headers := getDatabaseConfigTableHeaders(areCredsHidden)
 	var databaseRows []table.Row
 
 	sortByName := func(a, b DatabaseConfig) int {
@@ -22,8 +22,8 @@ func ListDatabases(areCredsHidden, isDecoded bool, databases []DatabaseConfig) {
 
 	slices.SortFunc(databases, sortByName)
 	for _, db := range databases {
-		db := handleDataVisibility(areCredsHidden, isDecoded, db)
-		databaseRows = append(databaseRows, db.mapToTableRow())
+		db := handleDataVisibility(isDecoded, db)
+		databaseRows = append(databaseRows, db.mapToTableRow(areCredsHidden))
 	}
 
 	utils.PrintTable(headers, databaseRows)
@@ -43,7 +43,7 @@ func isDbNameUnique(dbs []DatabaseConfig, name string) bool {
 	return true
 }
 
-func AddDatabase(name string, host string, user string, password string, dbType string) {
+func AddDatabase(name, host, user, password, dbType string) {
 	if name == "" {
 		log.Fatal("Database cannot be an empty string!")
 	}
@@ -72,9 +72,10 @@ func AddDatabase(name string, host string, user string, password string, dbType 
 	viper.WriteConfig()
 
 	database.Pass = HIDDEN_PASSWORD
+	areCredsHidden := false
 
 	fmt.Println("Successfully added the following entry")
-	utils.PrintTable(getDatabaseConfigTableHeaders(), []table.Row{database.mapToTableRow()})
+	utils.PrintTable(getDatabaseConfigTableHeaders(areCredsHidden), []table.Row{database.mapToTableRow(areCredsHidden)})
 }
 
 func removeTargetDatabase(databases []DatabaseConfig, name string) []DatabaseConfig {

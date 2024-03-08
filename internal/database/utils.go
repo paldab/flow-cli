@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-
 func GetDatabasesFromConfig() []DatabaseConfig {
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err.Error())

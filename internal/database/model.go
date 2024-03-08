@@ -14,10 +14,18 @@ type DatabaseConfig struct {
 	Type string
 }
 
-func getDatabaseConfigTableHeaders() table.Row {
+func getDatabaseConfigTableHeaders(areCredsHidden bool) table.Row {
+	if areCredsHidden {
+		return table.Row{"Name", "Host", "Type"}
+	}
+
 	return table.Row{"Name", "Host", "User", "Password", "Type"}
 }
 
-func (d DatabaseConfig) mapToTableRow() table.Row {
+func (d DatabaseConfig) mapToTableRow(areCredsHidden bool) table.Row {
+	if areCredsHidden {
+		return table.Row{d.Name, d.Host, d.Type}
+	}
+
 	return table.Row{d.Name, d.Host, d.User, d.Pass, d.Type}
 }
