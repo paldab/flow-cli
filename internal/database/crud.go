@@ -91,6 +91,10 @@ func DeleteDatabase(name string) {
 
 	updatedDbs := removeTargetDatabase(dbs, name)
 
+	if len(updatedDbs) == len(dbs) {
+		log.Fatalf("No database registered named: %s\n", name)
+	}
+
 	viper.Set("databases", updatedDbs)
 	viper.WriteConfig()
 	fmt.Printf("Successfully removed database: %s \n", name)
