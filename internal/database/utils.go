@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"log"
 
 	"github.com/spf13/viper"
@@ -19,14 +20,13 @@ func GetDatabasesFromConfig() []DatabaseConfig {
 	return dbs
 }
 
-func dbLookup(target string) DatabaseConfig {
+func dbLookup(target string) (DatabaseConfig, error) {
 	dbs := GetDatabasesFromConfig()
 	for _, db := range dbs {
 		if db.Name == target {
-			return db
+			return db, nil
 		}
 	}
 
-	log.Fatal("Could not find database! Make sure you registered the database")
-	return DatabaseConfig{}
+	return DatabaseConfig{}, errors.New("could not find database! Make sure that you registered the database")
 }

@@ -11,7 +11,6 @@ import (
 	"strings"
 )
 
-
 func createDatabaseConnectCommand(dbType, host, user, password, database string) string {
 	switch dbType {
 	case "mysql":
@@ -57,7 +56,10 @@ func Connect(databaseInstance, targetDatabase, passwordInput string) {
 		log.Fatal("Must specify a database")
 	}
 
-	targetDb := dbLookup(databaseInstance)
+	targetDb, err := dbLookup(databaseInstance)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	if passwordInput != "" {
 		targetDb.Pass = passwordInput
@@ -69,4 +71,3 @@ func Connect(databaseInstance, targetDatabase, passwordInput string) {
 	args := strings.Split(query, " ")
 	connectToDatabaseCli(args)
 }
-

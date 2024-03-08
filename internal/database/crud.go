@@ -1,37 +1,14 @@
 package database
 
 import (
-	"cmp"
 	"fmt"
 	"log"
-	"slices"
 	"strings"
 
 	"github.com/flow-cli/internal/utils"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/viper"
 )
-
-func ListDatabases(areCredsHidden, isDecoded bool, databases []DatabaseConfig) {
-	headers := getDatabaseConfigTableHeaders(areCredsHidden)
-	var databaseRows []table.Row
-
-	sortByName := func(a, b DatabaseConfig) int {
-		return cmp.Compare(a.Name, b.Name)
-	}
-
-	slices.SortFunc(databases, sortByName)
-	for _, db := range databases {
-		db := handleDataVisibility(isDecoded, db)
-		databaseRows = append(databaseRows, db.mapToTableRow(areCredsHidden))
-	}
-
-	utils.PrintTable(headers, databaseRows)
-}
-
-func FilterDatabases(query string, databases []DatabaseConfig) []DatabaseConfig {
-	return databases
-}
 
 func isDbNameUnique(dbs []DatabaseConfig, name string) bool {
 	for _, db := range dbs {
@@ -97,11 +74,11 @@ func DeleteDatabase(name string) {
 		log.Fatal("Can't delete database. No databases registered!")
 	}
 
-	updatedDbs := removeTargetDatabase(dbs, name)
-
-	if len(updatedDbs) == len(dbs) {
-		log.Fatalf("No database registered named: %s\n", name)
+	if _, err := dbLookup(name); err != nil {
+		log.Fatal(err.Error())
 	}
+
+	updatedDbs := removeTargetDatabase(dbs, name)
 
 	viper.Set("databases", updatedDbs)
 	viper.WriteConfig()

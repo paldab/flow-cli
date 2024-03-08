@@ -11,19 +11,11 @@ var hideCreds bool
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists the databases",
-	Long:  `Lists the databases`,
+	Long:  `Lists the databases. First argument is used to search within the list of databases`,
 	Run: func(cmd *cobra.Command, args []string) {
+		query := args[0]
 		databases := database.GetDatabasesFromConfig()
-		if len(args) < 1 {
-			database.ListDatabases(hideCreds, decoded, databases)
-			return
-		}
-
-		// TODO: Add search option as first arg[0]
-		if args[0] != "" {
-			databases := database.FilterDatabases(args[0], databases)
-			database.ListDatabases(hideCreds, decoded, databases)
-		}
+		database.ListDatabases(query, hideCreds, decoded, databases)
 	},
 }
 
