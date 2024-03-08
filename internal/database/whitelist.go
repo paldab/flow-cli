@@ -169,4 +169,3 @@ func Whitelist(ip, project, instance, networkName string) {
 
 	addNewNetwork(token, networks, project, instance)
 }
-
