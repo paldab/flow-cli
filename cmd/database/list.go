@@ -13,7 +13,14 @@ var listCmd = &cobra.Command{
 	Short: "Lists the databases",
 	Long:  `Lists the databases. First argument is used to search within the list of databases`,
 	Run: func(cmd *cobra.Command, args []string) {
-		query := args[0]
+		var query string
+
+		if len(args) > 0 {
+			query = args[0]
+		} else {
+			query = ""
+		}
+
 		databases := database.GetDatabasesFromConfig()
 		database.ListDatabases(query, hideCreds, decoded, databases)
 	},

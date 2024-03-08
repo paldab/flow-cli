@@ -15,11 +15,13 @@ func ListDatabases(query string, areCredsHidden, isDecoded bool, databases []Dat
 
 	filteredDatabases := FilterDatabases(query, databases)
 
-	sortByName := func(a, b DatabaseConfig) int {
-		return cmp.Compare(a.Name, b.Name)
+	if len(databases) > 1 {
+		sortByName := func(a, b DatabaseConfig) int {
+			return cmp.Compare(a.Name, b.Name)
+		}
+		slices.SortFunc(filteredDatabases, sortByName)
 	}
 
-	slices.SortFunc(filteredDatabases, sortByName)
 	for _, db := range filteredDatabases {
 		db := handleDataVisibility(isDecoded, db)
 		databaseRows = append(databaseRows, db.mapToTableRow(areCredsHidden))
