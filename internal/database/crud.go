@@ -1,8 +1,10 @@
 package database
 
 import (
+	"cmp"
 	"fmt"
 	"log"
+	"slices"
 	"strings"
 
 	"github.com/flow-cli/internal/utils"
@@ -14,6 +16,11 @@ func ListDatabases(areCredsHidden, isDecoded bool, databases []DatabaseConfig) {
 	headers := getDatabaseConfigTableHeaders()
 	var databaseRows []table.Row
 
+	sortByName := func(a, b DatabaseConfig) int {
+		return cmp.Compare(a.Name, b.Name)
+	}
+
+	slices.SortFunc(databases, sortByName)
 	for _, db := range databases {
 		db := handleDataVisibility(areCredsHidden, isDecoded, db)
 		databaseRows = append(databaseRows, db.mapToTableRow())
