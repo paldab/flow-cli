@@ -6,18 +6,28 @@ package kubernetes
 import (
 	"fmt"
 	"log"
+	"os/exec"
 	"slices"
 	"time"
 
 	"github.com/flow-cli/internal/cli"
-	"github.com/flow-cli/internal/kubernetes"
 	"github.com/spf13/cobra"
 )
 
 var previousOutput string
 
+// USES KUBECTL CLI SETUP
+func getKubectlPath() string {
+	path, err := exec.LookPath("kubectl")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	return path
+}
+
 func watchResources(isPod bool, namespace string) {
-	kubectl := kubernetes.GetKubectlPath()
+	kubectl := getKubectlPath()
 	resource := "node"
 
 	if isPod {
@@ -57,11 +67,11 @@ var watchCmd = &cobra.Command{
 		stopCh := make(chan struct{})
 
 		go func() {
-			watchResources(isPodCommand, namespace)
+			watchResources(isPodCommand, inputNamespace)
 			for {
 				select {
 				case <-ticker.C:
-					watchResources(isPodCommand, namespace)
+					watchResources(isPodCommand, inputNamespace)
 				case stopCh <- struct{}{}:
 					ticker.Stop()
 					return

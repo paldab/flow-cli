@@ -4,10 +4,12 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package kubernetes
 
 import (
+	"github.com/flow-cli/internal/kubernetes"
 	"github.com/spf13/cobra"
 )
 
-var namespace string
+var inputNamespace string
+var _, currentNamespace string = kubernetes.GetCurrentContexts()
 
 var KubernetesCmd = &cobra.Command{
 	Use:   "kubernetes",
@@ -17,11 +19,18 @@ var KubernetesCmd = &cobra.Command{
 	},
 }
 
+func getTargetNamespace() string {
+	if inputNamespace == "" {
+		return currentNamespace
+	}
+	return inputNamespace
+}
+
 func init() {
 	KubernetesCmd.Aliases = []string{"k", "kube"}
 	KubernetesCmd.AddCommand(imagesCmd)
 	KubernetesCmd.AddCommand(watchCmd)
-	KubernetesCmd.AddCommand(revertCmd)
+	KubernetesCmd.AddCommand(podCmd)
 
-	KubernetesCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "", "Select the namespace in your cluster")
+	KubernetesCmd.PersistentFlags().StringVarP(&inputNamespace, "namespace", "n", "", "Select the namespace in your cluster")
 }

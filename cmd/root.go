@@ -8,7 +8,6 @@ import (
 
 	"github.com/flow-cli/cmd/database"
 	"github.com/flow-cli/cmd/deploy"
-	"github.com/flow-cli/cmd/generate"
 	"github.com/flow-cli/cmd/ip"
 	"github.com/flow-cli/cmd/kubernetes"
 	internalDatabase "github.com/flow-cli/internal/database"
@@ -103,7 +102,6 @@ func init() {
 	rootCmd.AddCommand(ip.IpCmd)
 	rootCmd.AddCommand(deploy.DeployCmd)
 	rootCmd.AddCommand(kubernetes.KubernetesCmd)
-	rootCmd.AddCommand(generate.GenerateCmd)
 	// rootCmd.AddCommand(task.TaskCmd)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.flow/config.yaml)")

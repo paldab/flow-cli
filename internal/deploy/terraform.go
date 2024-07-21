@@ -44,16 +44,27 @@ func handleWorkspace(environment string) {
 	}
 }
 
-func TfPlan(environment string) {
+func getVarFile(varFile, environment string) string {
+	if varFile == "" {
+		return environment
+	}
+
+	return varFile
+}
+
+func TfPlan(environment, varFile string) {
 	handleWorkspace(environment)
-	command := fmt.Sprintf("terraform plan --var-file=./vars/%s.tfvars", environment)
+	targetVarFile := getVarFile(varFile, environment)
+	command := fmt.Sprintf("terraform plan --var-file=./vars/%s.tfvars", targetVarFile)
 
 	cli.RunCommand(command)
 }
 
-func TfApply(environment string, approve bool) {
+func TfApply(environment, varFile string, approve bool) {
 	handleWorkspace(environment)
-	command := fmt.Sprintf("terraform apply --var-file=./vars/%s.tfvars", environment)
+	targetVarFile := getVarFile(varFile, environment)
+
+	command := fmt.Sprintf("terraform apply --var-file=./vars/%s.tfvars", targetVarFile)
 	if approve {
 		command = command + " -auto-approve"
 	}
