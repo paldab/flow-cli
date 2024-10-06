@@ -19,12 +19,12 @@ universal_binaries:
 brews:
   - name: flow
     repository:
-      owner: edens-angel
+      owner: paldab
       name: homebrew-flow-cli
     commit_author:
-      name: edens-angel
+      name: paldab
     folder: Formula
-    homepage: https://github.com/Edens-Angel/flow-cli
+    homepage: https://github.com/paldab/flow-cli
     description: "Devops CLI to handle basic devops tasks"
     test: system "flow ip"
 
