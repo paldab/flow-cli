@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	core "k8s.io/api/core/v1"
@@ -84,4 +85,39 @@ func DeployPod(input, namespace string) {
 	}
 
 	fmt.Printf("Pod %s created successfully in namespace %s\n", targetPod.Name, namespace)
+}
+
+func DeleteFlowPods() {
+	client, err := newKubeClient()
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	labelSelector := "managed-by=flow"
+	pods, err := client.CoreV1().Pods("").List(context.TODO(), v1.ListOptions{
+		LabelSelector: labelSelector,
+	})
+
+	if err != nil {
+		log.Fatalf("error listing pods: %s", err.Error())
+	}
+
+	if len(pods.Items) == 0 {
+		fmt.Println("all pods managed by flow are deleted")
+		return
+	}
+
+	deletePolicy := v1.DeletePropagationForeground // Deletes all dependencies as well
+	for _, pod := range pods.Items {
+		err := client.CoreV1().Pods(pod.Namespace).Delete(context.TODO(), pod.Name, v1.DeleteOptions{
+			PropagationPolicy: &deletePolicy,
+		})
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error deleting pod: %v\n", err)
+		}
+	}
+
+	fmt.Println("deleting all pods managed by flow...")
 }

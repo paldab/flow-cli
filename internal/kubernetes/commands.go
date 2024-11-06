@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/flow-cli/internal/utils"
-	"github.com/jedib0t/go-pretty/v6/table"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
