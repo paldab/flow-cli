@@ -1,6 +1,8 @@
 builds:
   - binary: flow
-    id: linux
+    id: flow
+    ldflags:
+      - "-X main.version={{.Version}}"
     goos:
       - darwin
       - linux

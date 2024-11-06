@@ -38,12 +38,14 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+
+	rootCmd.AddCommand(versionCmd)
+
 	rootCmd.AddCommand(database.DatabaseCmd)
 	rootCmd.AddCommand(ip.IpCmd)
 	rootCmd.AddCommand(deploy.DeployCmd)
 	rootCmd.AddCommand(kubernetes.KubernetesCmd)
 	rootCmd.AddCommand(generate.GenerateCmd)
-	// rootCmd.AddCommand(task.TaskCmd)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.flow/config.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "enable verbose logs")
