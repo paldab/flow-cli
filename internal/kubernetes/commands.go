@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/flow-cli/internal/utils"
@@ -80,12 +81,10 @@ func GetControllerObjects(namespace string, includeDaemonSets bool) []Kubernetes
 }
 
 func ShowControllerObjects(objects []KubernetesControllerObjects) {
-	header := table.Row{"Name", "Image", "Replicas"}
-	rows := []table.Row{}
+	fmt.Println("NAME\tIMAGE\tREPLICAS")
 
 	for _, obj := range objects {
-		rows = append(rows, obj.mapToTableRow())
+		objectEntry := fmt.Sprintf("%s\t%s\t%s", obj.Name, obj.Image, obj.Replicas)
+		fmt.Println(objectEntry)
 	}
-
-	utils.PrintTable(header, rows)
 }
