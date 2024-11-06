@@ -23,8 +23,10 @@ var availablePods []PodData = []PodData{
 }
 
 func ListPods() {
+	fmt.Println("NAME\tIMAGE")
 	for _, pod := range availablePods {
-		fmt.Println(pod.Name)
+		podEntry := fmt.Sprintf("%s\t%s", pod.Name, pod.Image)
+		fmt.Println(podEntry)
 	}
 }
 
@@ -67,11 +69,11 @@ func createPod(pod PodData, namespace string) *core.Pod {
 }
 
 func DeployPod(input, namespace string) {
-    client, err := newKubeClient()
+	client, err := newKubeClient()
 
-    if err != nil {
-        log.Fatal(err.Error())
-    }
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	targetPod := SearchPod(input)
 	newPod := createPod(targetPod, namespace)
