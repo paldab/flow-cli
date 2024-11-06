@@ -20,7 +20,7 @@ var previousOutput string
 func getKubectlPath() string {
 	path, err := exec.LookPath("kubectl")
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("could not get kubectl config. %s", err.Error())
 	}
 
 	return path
@@ -47,10 +47,12 @@ func watchResources(isPod bool, namespace string) {
 	}
 }
 
+var refreshInterval int = 5
 var watchCmd = &cobra.Command{
-	Use:   "watch",
-	Short: "Watches resources and refreshes every X seconds",
-	Args:  cobra.ExactArgs(1),
+	Use:     "watch",
+	Aliases: []string{"top"},
+	Short:   fmt.Sprintf("Watches resources and refreshes every %d seconds", refreshInterval),
+	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		nodeList := []string{"node", "nodes", "n"}
 		podList := []string{"pod", "pods", "p"}
@@ -60,10 +62,10 @@ var watchCmd = &cobra.Command{
 		isPodCommand := slices.Contains(podList, command)
 
 		if !isNodeCommand && !isPodCommand {
-			log.Fatal("Your command isn't a Node or a Pod. Please choose node or pod")
+			log.Fatal("your command isn't a Node or a Pod.")
 		}
 
-		ticker := time.NewTicker(5 * time.Second)
+		ticker := time.NewTicker(time.Duration(refreshInterval) * time.Second)
 		stopCh := make(chan struct{})
 
 		go func() {

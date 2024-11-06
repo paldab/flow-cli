@@ -1,0 +1,24 @@
+run:
+  concurrency: 6
+  tests: true
+
+linters:
+  disable-all: true
+  enable:
+    - gofmt
+    - goimports
+    - govet
+    - ineffassign
+    - misspell
+    - unused
+    - goheader
+    - gosec
+    - gomodguard
+    - gosimple
+    - errcheck
+    - gocyclo
+    - gosec
+    - gosimple
+    - misspell
+    - prealloc
+    - typecheck

@@ -10,6 +10,12 @@ import (
 )
 
 func GetControllerObjects(namespace string, includeDaemonSets bool) []KubernetesControllerObjects {
+	client, err := newKubeClient()
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
 	var controllers []KubernetesControllerObjects
 	deployments, err := client.AppsV1().Deployments(namespace).List(context.Background(), v1.ListOptions{})
 	if err != nil {

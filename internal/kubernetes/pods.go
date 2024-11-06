@@ -18,7 +18,7 @@ type PodData struct {
 
 var availablePods []PodData = []PodData{
 	{Name: "ping", Image: "busybox", Command: []string{"sleep", "3600"}},
-	{Name: "curl", Image: "curlimages/curl"},
+	{Name: "curl", Image: "curlimages/curl", Command: []string{"sleep", "3600"}},
 	{Name: "gcloud", Image: "google/cloud-sdk:slim", Command: []string{"sleep", "3600"}},
 }
 
@@ -45,7 +45,7 @@ func createPod(pod PodData, namespace string) *core.Pod {
 			Name:      pod.Name,
 			Namespace: namespace,
 			Labels: map[string]string{
-				"deployedBy": "Flow",
+				"managed-by": "flow",
 			},
 		},
 		Spec: core.PodSpec{
@@ -67,10 +67,16 @@ func createPod(pod PodData, namespace string) *core.Pod {
 }
 
 func DeployPod(input, namespace string) {
+    client, err := newKubeClient()
+
+    if err != nil {
+        log.Fatal(err.Error())
+    }
+
 	targetPod := SearchPod(input)
 	newPod := createPod(targetPod, namespace)
 
-	_, err := client.CoreV1().Pods(namespace).Create(context.Background(), newPod, v1.CreateOptions{})
+	_, err = client.CoreV1().Pods(namespace).Create(context.Background(), newPod, v1.CreateOptions{})
 	if err != nil {
 		log.Fatalf("Error creating pod: %v", err)
 	}

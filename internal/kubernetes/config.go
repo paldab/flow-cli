@@ -1,6 +1,7 @@
 package kubernetes
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -15,8 +16,6 @@ type KubernetesControllerObjects struct {
 	Image    string
 	Replicas int
 }
-
-var client *kubernetes.Clientset = kubeClient()
 
 func (controller KubernetesControllerObjects) mapToTableRow() table.Row {
 	return table.Row{controller.Name, controller.Image, controller.Replicas}
@@ -33,20 +32,20 @@ func getKubeConfig() string {
 	return filepath.Join(userHomeDir, defaultKubeFolder, defaultKubeConfig)
 }
 
-func GetCurrentContexts() (string, string) {
+func GetCurrentContexts() (string, string, error) {
 	config, err := clientcmd.LoadFromFile(getKubeConfig())
 	if err != nil {
-		log.Fatal(err.Error())
+		return "", "", err
 	}
 
 	currentContext := config.CurrentContext
 	if currentContext == "" {
-		log.Fatal("No current context found in kubeconfig")
+		return "", "", fmt.Errorf("No current context found in kubeconfig")
 	}
 
 	currentContextConfig := config.Contexts[currentContext]
 	if currentContextConfig == nil {
-		log.Fatalf("Context %s not found in kubeconfig", currentContext)
+		return "", "", fmt.Errorf("Context %s not found in kubeconfig", currentContext)
 	}
 
 	currentNamespace := currentContextConfig.Namespace
@@ -55,21 +54,21 @@ func GetCurrentContexts() (string, string) {
 		currentNamespace = "default"
 	}
 
-	return currentContext, currentNamespace
+	return currentContext, currentNamespace, nil
 }
 
-func kubeClient() *kubernetes.Clientset {
+func newKubeClient() (*kubernetes.Clientset, error) {
 	kubeConfigPath := getKubeConfig()
 	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
 	if err != nil {
-		log.Fatal(err.Error())
+		fmt.Errorf("could not connect to kubernetes cluster. %s", err.Error())
 	}
 
 	client, err := kubernetes.NewForConfig(kubeConfig)
 
 	if err != nil {
-		log.Fatal(err.Error())
+		fmt.Errorf("could not create kubernetes client. %s", err.Error())
 	}
 
-	return client
+	return client, nil
 }

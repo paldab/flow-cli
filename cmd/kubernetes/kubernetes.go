@@ -4,12 +4,13 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package kubernetes
 
 import (
+	"log"
+
 	"github.com/flow-cli/internal/kubernetes"
 	"github.com/spf13/cobra"
 )
 
 var inputNamespace string
-var _, currentNamespace string = kubernetes.GetCurrentContexts()
 
 var KubernetesCmd = &cobra.Command{
 	Use:   "kubernetes",
@@ -20,9 +21,16 @@ var KubernetesCmd = &cobra.Command{
 }
 
 func getTargetNamespace() string {
+	_, currentNamespace, err := kubernetes.GetCurrentContexts()
+
+	if err != nil {
+		log.Fatalf("could not run kubernetes command. Something went wrong with connecting to a cluster. %s", err.Error())
+	}
+
 	if inputNamespace == "" {
 		return currentNamespace
 	}
+
 	return inputNamespace
 }
 
