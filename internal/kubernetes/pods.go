@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/flow-cli/internal/config"
 	core "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -48,7 +49,7 @@ func createPod(pod PodData, namespace string) *core.Pod {
 			Name:      pod.Name,
 			Namespace: namespace,
 			Labels: map[string]string{
-				"managed-by": "flow",
+				"managed-by": config.AppName,
 			},
 		},
 		Spec: core.PodSpec{
@@ -104,7 +105,7 @@ func DeleteFlowPods() {
 	}
 
 	if len(pods.Items) == 0 {
-		fmt.Println("all pods managed by flow are deleted")
+		fmt.Printf("all pods managed by %s are deleted\n", config.AppName)
 		return
 	}
 
