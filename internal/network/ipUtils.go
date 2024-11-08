@@ -43,5 +43,6 @@ func PrettyPrint(data fullIP) error {
 	}
 
 	fmt.Println(string(b))
-    return nil
+	return nil
 }
+
