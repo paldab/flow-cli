@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package ip
 
 import (
@@ -16,15 +13,16 @@ var allFlag bool
 var IpCmd = &cobra.Command{
 	Use:   "ip",
 	Short: "Gets current ip address",
-	Long:  `Gets current ip address.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ip, err := network.GetIp()
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Fatalf("could not get IP. %s", err.Error())
 		}
 
 		if allFlag {
-			network.PrettyPrint(ip)
+            if err := network.PrettyPrint(ip); err != nil {
+                log.Fatal(err.Error())
+            }
 			return
 		}
 

@@ -7,7 +7,6 @@ import (
 	"path"
 
 	"github.com/flow-cli/cmd/database"
-	"github.com/flow-cli/cmd/deploy"
 	"github.com/flow-cli/cmd/generate"
 	"github.com/flow-cli/cmd/ip"
 	"github.com/flow-cli/cmd/kubernetes"
@@ -36,6 +35,7 @@ func Execute() {
 	}
 }
 
+// Terraform & Task modules disabled
 func init() {
 	cobra.OnInitialize(initConfig)
 
@@ -43,7 +43,6 @@ func init() {
 
 	rootCmd.AddCommand(database.DatabaseCmd)
 	rootCmd.AddCommand(ip.IpCmd)
-	rootCmd.AddCommand(deploy.DeployCmd)
 	rootCmd.AddCommand(kubernetes.KubernetesCmd)
 	rootCmd.AddCommand(generate.GenerateCmd)
 

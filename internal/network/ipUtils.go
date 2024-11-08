@@ -36,10 +36,12 @@ func GetIp() (fullIP, error) {
 	return ip, nil
 }
 
-func PrettyPrint(data fullIP) {
+func PrettyPrint(data fullIP) error {
 	b, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
-		fmt.Println(err)
+		return fmt.Errorf("could not marshal IP data. %s", err.Error())
 	}
+
 	fmt.Println(string(b))
+    return nil
 }

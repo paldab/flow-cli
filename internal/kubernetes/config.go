@@ -50,8 +50,8 @@ func GetCurrentContexts() (string, string, error) {
 
 	currentNamespace := currentContextConfig.Namespace
 	if currentNamespace == "" {
-		// Default namespace if not set in kubeconfig
-		currentNamespace = "default"
+		defaultNamespace := "default"
+		currentNamespace = defaultNamespace
 	}
 
 	return currentContext, currentNamespace, nil
@@ -61,13 +61,12 @@ func newKubeClient() (*kubernetes.Clientset, error) {
 	kubeConfigPath := getKubeConfig()
 	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
 	if err != nil {
-		fmt.Errorf("could not connect to kubernetes cluster. %s", err.Error())
+		return nil, fmt.Errorf("could not connect to kubernetes cluster. %s", err.Error())
 	}
 
 	client, err := kubernetes.NewForConfig(kubeConfig)
-
 	if err != nil {
-		fmt.Errorf("could not create kubernetes client. %s", err.Error())
+		return nil, fmt.Errorf("could not create kubernetes client. %s", err.Error())
 	}
 
 	return client, nil

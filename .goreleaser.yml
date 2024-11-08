@@ -1,8 +1,8 @@
 builds:
   - binary: flow
-    id: flow
+    id: linux
     ldflags:
-      - "-X main.version={{.Version}}"
+      - "-X main.version={{.version}}"
     goos:
       - darwin
       - linux
@@ -25,7 +25,7 @@ brews:
       name: homebrew-flow-cli
     commit_author:
       name: paldab
-    folder: Formula
+    directory: Formula
     homepage: https://github.com/paldab/flow-cli
     description: "Devops CLI to handle basic devops tasks"
     test: system "flow ip"

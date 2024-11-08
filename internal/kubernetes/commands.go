@@ -82,7 +82,7 @@ func ShowControllerObjects(objects []KubernetesControllerObjects) {
 	fmt.Println("NAME\tIMAGE\tREPLICAS")
 
 	for _, obj := range objects {
-		objectEntry := fmt.Sprintf("%s\t%s\t%s", obj.Name, obj.Image, obj.Replicas)
+		objectEntry := fmt.Sprintf("%s\t%s\t%d", obj.Name, obj.Image, obj.Replicas)
 		fmt.Println(objectEntry)
 	}
 }
